@@ -7,7 +7,7 @@ var spec =
         version: "1.0",
         title: "SE104 - eateria",
     },
-    host: "https://se104-eateria.onrender.com",
+    host: "se104-eateria.onrender.com",
     basePath: "/v1",
     tags: [
         {
@@ -27,17 +27,17 @@ var spec =
                 summary: "register new user",
                 description: "",
                 operationId: "createNewUserAccount",
-                consumes: ["multipart/form-data"],
+                consumes: ["application/x-www-form-urlencoded"],
                 produces: ["application/json"],
                 parameters: [
                     {
                         "in": "formData",
                         "name": "username",
-                        "required": "true",
+                        "required": "true",    // Tham số là bắt buộc
                         "schema": {
-                            "type": "string"
+                            "type": "string"   // Loại dữ liệu của tham số là chuỗi
                         },
-                        "description": "email cho tài khoản mới"
+                        "description": "username"
                     },
                     {
                         "in": "formData",
@@ -46,7 +46,7 @@ var spec =
                         "schema": {
                             "type": "string"
                         },
-                        "description": "email cho tài khoản mới"
+                        "description": "email"
                     },
                     {
                         "in": "formData",
@@ -55,7 +55,7 @@ var spec =
                         "schema": {
                             "type": "string"
                         },
-                        "description": "password cho tài khoản mới"
+                        "description": "password"
                     }
                 ],
                 responses: {
@@ -83,7 +83,7 @@ var spec =
                 summary: "login user",
                 description: "",
                 operationId: "loginUserAccount",
-                consumes: ["multipart/form-data"],
+                consumes: ["application/x-www-form-urlencoded"],
                 produces: ["application/json"],
                 parameters: [
                     {
@@ -133,19 +133,9 @@ var spec =
                 summary: "logout user",
                 description: "",
                 operationId: "logoutUserAccount",
-                consumes: ["multipart/form-data"],
+                consumes: ["application/x-www-form-urlencoded"],
                 produces: ["application/json"],
                 parameters: [
-                    {
-                        "in": "path",
-                        "name": "accessToken",
-                        "required": "true",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "accessToken in Bearer token in authorization header of request"
-
-                    }
                 ],
                 responses: {
                     200: {
@@ -153,7 +143,9 @@ var spec =
                     },
                 },
                 security: [
-
+                    {
+                        accessToken: []
+                    }
                 ]
             },
         },
@@ -166,16 +158,7 @@ var spec =
                 consumes: ["multipart/form-data"],
                 produces: ["application/json"],
                 parameters: [
-                    {
-                        "in": "path",
-                        "name": "accessToken",
-                        "required": "true",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "accessToken in Bearer token in authorization header of request"
 
-                    }
                 ],
                 responses: {
                     409: {
@@ -190,7 +173,9 @@ var spec =
                     },
                 },
                 security: [
-
+                    {
+                        accessToken: []
+                    }
                 ]
             },
         },
@@ -203,15 +188,6 @@ var spec =
                 consumes: ["multipart/form-data"],
                 produces: ["application/json"],
                 parameters: [
-                    {
-                        "in": "path",
-                        "name": "accessTokenAdmin",
-                        "required": "true",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "accessToken in Bearer token in authorization header of request and must be admin"
-                    }
                 ],
                 responses: {
                     200: {
@@ -224,6 +200,146 @@ var spec =
                             }
                         }
                     },
+                    404: {
+                        description: "no user found in database"
+                    },
+                    500: {
+                        description: "server error"
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            },
+        },
+        "/user/{id}": {
+            get: {
+                tags: ["admins", "users"],
+                summary: "get user info",
+                description: "get user info by id (only admin or get current user info)",
+                operationId: "getUserInfo",
+                consumes: ["multipart/form-data"],
+                produces: ["application/json"],
+                parameters: [
+
+                ],
+                responses: {
+                    200: {
+                        description: "get user info by id successfully",
+                        schema: {
+                            $ref: "#/definitions/user"
+                        }
+                    },
+                    404: {
+                        description: "user not found"
+                    },
+                    500: {
+                        description: "server error"
+                    }
+                },
+                security: [
+                    // bearer token in authorization header
+                    {
+                        accessToken: []
+                    }
+                ]
+            },
+            put: {
+                tags: ["admins", "users"],
+                summary: "update user info",
+                description: "update user info by id (only admin or update current user info)",
+                operationId: "updateUserInfo",
+                consumes: ["multipart/form-data"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "images",
+                        "required": "false",
+                        "schema": {
+                            "type": "file"
+                        },
+                        "description": "images"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "required": "true",    // Tham số là bắt buộc
+                        "schema": {
+                            "type": "string"   // Loại dữ liệu của tham số là chuỗi
+                        },
+                        "description": "username"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "email"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "password"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "update user info by id successfully",
+                        schema: {
+                            $ref: "#/definitions/user"
+                        }
+                    },
+                    404: {
+                        description: "user not found"
+                    },
+                    500: {
+                        description: "server error"
+                    }
+                },
+                security: [
+                    // bearer token in authorization header
+                    {
+                        accessToken: []
+                    }
+                ]
+            },
+        },
+
+        "/user/forgot-password": {
+            post: {
+                tags: ["users"],
+                summary: "forgot password",
+                description: "forgot password",
+                operationId: "forgotPassword",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "email"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "New password sent to your email",
+                    },
+                    404: {
+                        description: "email not found"
+                    },
                     500: {
                         description: "server error"
                     }
@@ -233,61 +349,65 @@ var spec =
                 ]
             },
         },
-        "/user/{id}": {
-            get: {
-                // tags both admin and user can use this api
-                tags: ["admins", "users"],
-                summary: "get user info",
-                description: "get user info",
-                operationId: "getUserInfo",
-                consumes: ["multipart/form-data"],
+        "/user/change-password": {
+            post: {
+                tags: ["users"],
+                summary: "change password",
+                description: "change password",
+                operationId: "changePassword",
+                consumes: ["application/x-www-form-urlencoded"],
                 produces: ["application/json"],
                 parameters: [
                     {
-                        "in": "path",
-                        "name": "accessTokenAdminOrCurrentUser",
+                        "in": "formData",
+                        "name": "password",
                         "required": "true",
                         "schema": {
                             "type": "string"
                         },
-                        "description": "accessToken in Bearer token in authorization header of request and must be admin or user with id is the same as id in path"
+                        "description": "password"
                     },
                     {
-                        "in": "path",
-                        "name": "id",
+                        "in": "formData",
+                        "name": "newPassword",
                         "required": "true",
                         "schema": {
                             "type": "string"
                         },
-                        "description": "id of user"
+                        "description": "newPassword"
                     }
                 ],
                 responses: {
                     200: {
-                        description: "get user info successfully",
-                        schema: {
-                            $ref: "#/definitions/user"
-                        }
+                        description: "change password successfully",
+                    },
+                    404: {
+                        description: "User not found"
+                    },
+                    400: {
+                        description: "password is incorrect"
                     },
                     500: {
                         description: "server error"
                     }
                 },
-                security: [
-                    // bearer token in authorization header
-                    {
-                        api_key: []
-                    }
-                ]
             },
-        },
-    },
-    securityDefinitions: {    // Thông tin về api key sử dụng để thực hiện request
-        api_key: {
-            type: "apiKey",      // Thuộc loại apsi key xác thực
-            name: "api_key",     // Tên trường chứa api key xác thực
-            in: "header",        // API key được để trong phần header của request
         }
+    },
+    securityDefinitions: {
+        accessToken: {
+            type: "apiKey",
+            name: "accessToken",
+            in: "Authorization",
+        },
+        accessTokenAdmin: {
+            type: "apiKey",
+            name: "accessToken",
+            in: "Authorization",
+            scopes: {
+                isAdmin: true
+            }
+        },
     },
     definitions: {
         login: {
