@@ -42,6 +42,14 @@ var spec =
         {
             name: "bill",
             description: "API in route /bill (get all bills info, get bill info, create bill, update bill, delete bill)",
+        },
+        {
+            name: "discount",
+            description: "API in route /discount (get all discounts info, get discount info, create discount, update discount, delete discount)",
+        },
+        {
+            name: "revenue",
+            description: "API in route /revenue (get all revenue info, get revenue info)",
         }
     ],
     schemes: ["https"],    // Sử dụng scheme gì? HTTP, HTTPS?
@@ -1329,8 +1337,835 @@ var spec =
                     }
                 ]
             }
-        }
+        },
+        // bill
+        "/bill/all": {
+            get: {
+                tags: ["bill"],
+                summary: "get all bills info",
+                description: "get all bills info",
+                operationId: "getAllBillsInfo",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all bills info successfully",
+                        schema: {
+                            name: "bills",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/bill"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
 
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/bill/dish/add": {
+            post: {
+                tags: ["bill"],
+                summary: "add dish to cart",
+                description: "add dish to cart",
+                operationId: "addDishToCart",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "dishId",
+                        "required": "true",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "dishId"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "add dish to cart successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/bill/dish/remove": {
+            post: {
+                tags: ["bill"],
+                summary: "remove dish from cart",
+                description: "remove dish from cart",
+                operationId: "removeDishFromCart",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "dishId",
+                        "required": "true",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "dishId"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "remove dish from cart successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/bill/cart": {
+            get: {
+                tags: ["bill"],
+                summary: "get cart",
+                description: "get cart",
+                operationId: "getCart",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get cart successfully",
+                        schema: {
+                            name: "cart",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/dish"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/bill/all/username/:username": {
+            // get all bill by username
+            get: {
+                tags: ["bill"],
+                summary: "get all bill by username",
+                description: "get all bill by username",
+                operationId: "getAllBillByUsername",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all bill by username successfully",
+                        schema: {
+                            name: "bills",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/bill"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/bill/all/filter": {
+            // filter by username, id, fromDay, toDay, billPayed
+            get: {
+                tags: ["bill"],
+                summary: "filter bill",
+                description: "filter bill by username, id, fromDay, toDay, billPayed",
+                operationId: "filterBill",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "query",
+                        "name": "username",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "username"
+                    },
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "id"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fromDay",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "fromDay"
+                    },
+                    {
+                        "in": "query",
+                        "name": "toDay",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "toDay"
+                    },
+                    {
+                        "in": "query",
+                        "name": "billPayed",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "billPayed"
+                    },
+                ],
+                responses: {
+                    200: {
+                        description: "filter bill successfully",
+                        schema: {
+                            name: "bills",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/bill"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/bill/unpaid/{:id}": {
+            // get unpaid bill by userId
+            get: {
+                tags: ["bill"],
+                summary: "get unpaid bill by userId",
+                description: "get unpaid bill by userId",
+                operationId: "getUnpaidBillByUserId",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get unpaid bill by userId successfully",
+                        schema: {
+                            $ref: "#/definitions/bill"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/bill/all/userid/{:id}": {
+            // get all bill by userId
+            get: {
+                tags: ["bill"],
+                summary: "get all bill by userId",
+                description: "get all bill by userId",
+                operationId: "getAllBillByUserId",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all bill by userId successfully",
+                        schema: {
+                            name: "bills",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/bill"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/bill/dish/{:id}/{:billid}": {
+            // get all dishes of bill by userId and billId
+            get: {
+                tags: ["bill"],
+                summary: "get all dishes of bill by userId and billId",
+                description: "get all dishes of bill by userId and billId",
+                operationId: "getAllDishesOfBillByUserIdAndBillId",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all dishes of bill by userId and billId successfully",
+                        schema: {
+                            name: "dishes",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/dish"
+                            }
+                        }
+                    },
+                    400: {
+                        description: "wrong billId",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "wrong billId"
+                                }
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/bill/checkout/{:id}": {
+            post: {
+                tags: ["bill"],
+                summary: "checkout",
+                description: "checkout",
+                operationId: "checkout",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "discountCode",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "discountCode"
+                    }
+                ],
+                responses: {
+                    404: {
+                        description: "no unpaid bill found",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "no unpaid bill found"
+                                }
+                            }
+                        }
+                    },
+                    400: {
+                        description: "discount code is not available",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "discount code is not available"
+                                }
+                            }
+                        }
+                    },
+                    200: {
+                        description: "checkout successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/discount": {
+            get: {
+                tags: ["discount"],
+                summary: "get all discount",
+                description: "get all discount",
+                operationId: "getAllDiscount",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all discount successfully",
+                        schema: {
+                            name: "discounts",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/discount"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            },
+            post: {
+                tags: ["discount"],
+                summary: "create discount",
+                description: "create discount",
+                operationId: "createDiscount",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    // {
+                    //     "discountCode": "DISCOUNT50",
+                    //     "discountDecription": "This is 50% discount",
+                    //     "discountPercent": 50,
+                    //     "startDay": "2021-05-05",
+                    //     "endDay": "2021-05-05"
+                    // }
+                    {
+                        "in": "formData",
+                        "name": "discountCode",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "discountCode"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "discountDecription",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "discountDecription"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "discountPercent",
+                        "required": "true",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "discountPercent"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "startDay",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "startDay"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "endDay",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "endDay"
+                    },
+                ],
+                responses: {
+                    200: {
+                        description: "create discount successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/discount/assign/{:id}": {
+            // assign discount to all user
+            post: {
+                tags: ["discount"],
+                summary: "assign discount to all user",
+                description: "assign discount to all user",
+                operationId: "assignDiscountToAllUser",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    400: {
+                        description: "discount not found",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "discount not found"
+                                }
+                            }
+                        }
+                    },
+                    200: {
+                        description: "assign discount to all user successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/discount/user": {
+            // get all user discount
+            get: {
+                tags: ["discount"],
+                summary: "get all user discount",
+                description: "get all user discount",
+                operationId: "getAllUserDiscount",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all user discount successfully",
+                        schema: {
+                            name: "discounts",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/discount"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        // table
+        "/table": {
+            post: {
+                tags: ["table"],
+                summary: "create table",
+                description: "create table",
+                operationId: "createTable",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "formData",
+                        "name": "tablePosition",
+                        "required": "true",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "tablePosition"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "create table successfully",
+                        schema: {
+                            $ref: "#/definitions/successResponse"
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/table/filter": {
+            get: {
+                tags: ["table"],
+                summary: "filter table",
+                description: "filter table by tablePosition",
+                operationId: "filterTable",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                    {
+                        "in": "query",
+                        "name": "position",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "position"
+                    },
+                    {
+                        "in": "query",
+                        "name": "status",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "status"
+                    },
+                    {
+                        "in": "query",
+                        "name": "day",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "day"
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "filter table successfully",
+                        schema: {
+                            name: "tables",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/table"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessTokenAdmin: []
+                    }
+                ]
+            }
+        },
+        "/table/all": {
+            get: {
+                tags: ["table"],
+                summary: "get all table",
+                description: "get all table",
+                operationId: "getAllTable",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get all table successfully",
+                        schema: {
+                            name: "tables",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/table"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "server error"
+                                }
+                            }
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        },
+        "/table/my-table": {
+            get: {
+                tags: ["table"],
+                summary: "get my table",
+                description: "get my table",
+                operationId: "getMyTable",
+                consumes: ["application/x-www-form-urlencoded"],
+                produces: ["application/json"],
+                parameters: [
+                ],
+                responses: {
+                    200: {
+                        description: "get my table successfully",
+                        schema: {
+                            name: "tables",
+                            type: "array",
+                            items: {
+                                $ref: "#/definitions/table"
+                            }
+                        }
+                    },
+                    500: {
+                        description: "server error",
+                        schema: {
+                            $ref: "#/definitions/messageErrorFromServer"
+                        }
+                    }
+                },
+                security: [
+                    {
+                        accessToken: []
+                    }
+                ]
+            }
+        }
     },
 
     securityDefinitions: {
@@ -1537,6 +2372,116 @@ var spec =
                 dishId: {
                     type: "integer",
                     description: "dish id",
+                    example: 1
+                },
+            }
+        },
+        bill: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "integer",
+                    description: "bill id",
+                    example: 1
+                },
+                userId: {
+                    type: "integer",
+                    description: "user id",
+                    example: 1
+                },
+                billDate: {
+                    type: "string",
+                    description: "bill date",
+                    example: "bill date"
+                },
+                totalMoney: {
+                    type: "integer",
+                    description: "total money",
+                    example: 10000
+                },
+                billPayed: {
+                    type: "string",
+                    description: "bill payed",
+                    example: "bill payed"
+                },
+                discountId: {
+                    type: "integer",
+                    description: "discount id",
+                    example: 1
+                },
+                createdAt: {
+                    type: "string",
+                    description: "created at",
+                    example: "created at"
+                },
+                updatedAt: {
+                    type: "string",
+                    description: "updated at",
+                    example: "updated at"
+                },
+                user: {
+                    type: "object",
+                    properties: {
+                        username: {
+                            type: "string",
+                            description: "username",
+                            example: "username"
+                        },
+                    }
+                },
+            }
+        },
+        discount: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "integer",
+                    description: "discount id",
+                    example: 1
+                },
+                discountCode: {
+                    type: "string",
+                    description: "discount code",
+                    example: "discount code"
+                },
+                discountDecription: {
+                    type: "string",
+                    description: "discount decription",
+                    example: "discount decription"
+                },
+                discountPercent: {
+                    type: "integer",
+                    description: "discount percent",
+                    example: 10000
+                },
+                startDay: {
+                    type: "string",
+                    description: "start day",
+                    example: "start day"
+                },
+                endDay: {
+                    type: "string",
+                    description: "end day",
+                    example: "end day"
+                },
+            }
+        },
+        table: {
+            type: "object",
+            properties: {
+                id: {
+                    type: "integer",
+                    description: "table id",
+                    example: 1
+                },
+                tablePosition: {
+                    type: "string",
+                    description: "table position",
+                    example: "table position"
+                },
+                tableStatus: {
+                    type: "integer",
+                    description: "tableStatus",
                     example: 1
                 },
             }
