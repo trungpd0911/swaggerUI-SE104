@@ -302,7 +302,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -735,7 +735,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -884,7 +884,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -920,12 +920,12 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
         },
-        "/images/{id}": {
+        "/dish/images/{id}": {
             delete: {
                 tags: ["dish"],
                 summary: "delete image",
@@ -965,7 +965,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -1178,7 +1178,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -1218,7 +1218,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1370,7 +1370,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1525,7 +1525,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1601,7 +1601,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1671,7 +1671,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1720,7 +1720,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1822,7 +1822,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             },
@@ -1903,7 +1903,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -1948,7 +1948,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -2025,7 +2025,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -2084,7 +2084,7 @@ var spec =
                 },
                 security: [
                     {
-                        accessTokenAdmin: []
+                        accessToken: []
                     }
                 ]
             }
@@ -2171,19 +2171,9 @@ var spec =
     securityDefinitions: {
         accessToken: {
             type: "apiKey",
-            name: "accessToken",
-            in: "Authorization",
-            scheme: "bearer token"
-        },
-        accessTokenAdmin: {
-            type: "apiKey",
-            name: "accessToken",
-            in: "Authorization",
-            scheme: "bearer token",
-            scopes: {
-                isAdmin: true
-            }
-        },
+            name: "Authorization",
+            in: "header"
+        }
     },
     definitions: {
         login: {
