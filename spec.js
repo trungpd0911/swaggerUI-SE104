@@ -502,12 +502,12 @@ var spec =
                 parameters: [
                     {
                         "in": "formData",
-                        "name": "password",
+                        "name": "oldPassword",
                         "required": "true",
                         "schema": {
                             "type": "string"
                         },
-                        "description": "password"
+                        "description": "oldPassword"
                     },
                     {
                         "in": "formData",
