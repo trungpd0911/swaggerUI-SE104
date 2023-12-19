@@ -99,6 +99,19 @@ var spec =
                             $ref: "#/definitions/provideAllFields"
                         }
                     },
+                    403: {
+                        description: "Password must be at least 8 characters and contain at least 1 number and 1 letter",
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: {
+                                    type: "string",
+                                    description: "error message",
+                                    example: "Password must be at least 8 characters and contain at least 1 number and 1 letter"
+                                }
+                            }
+                        }
+                    },
                     409: {
                         description: "email already exists",
                         schema: {
